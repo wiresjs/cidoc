@@ -1,0 +1,30 @@
+{% extends 'index.html' %}
+
+
+{%block content%}
+{% for name, categories in sections %}
+<h1>Documentation</h1>
+<h3>Contents</h3>
+<ul style="font-size:20px">
+	<li>{{name}}
+	<ul>
+	{% for categoryName, categoryData in categories %}
+			<li>{{categoryName}}
+				<ul>
+				{% for moduleName, module in categoryData.modules %}
+						<li>{{moduleName}} 
+						<ul>
+						{%for doc in module.docs %}
+							<li><a href="/doc/{{doc.id}}">{{doc.name}}</a></li>
+						{%endfor%}
+						</ul>
+						</li>
+				{%endfor%}
+				</ul>
+			</li>
+	{%endfor%}
+	</ul>
+	</li>
+</ul>
+{%endfor%}
+{%endblock%}
