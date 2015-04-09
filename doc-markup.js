@@ -4,12 +4,12 @@ module.exports = function(json) {
 	var markup = [];
 
 	markup.push('# ' + json.info.module + " / " + json.info.category + " / " + json.info.name);
+	markup.push('##### ' + json.info.filepath);
+
 	markup.push('');
 	markup.push(json.info.summary.join('\n'));
 	markup.push('');
 	markup.push('---');
-
-	markup.push('# Functions');
 
 	_.each(json.functions, function(func) {
 		markup.push('### ' + func.title);

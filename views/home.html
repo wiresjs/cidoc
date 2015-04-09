@@ -2,11 +2,9 @@
 
 
 {%block content%}
-{% for name, categories in sections %}
 <h1>Documentation</h1>
-<h3>Contents</h3>
-<ul style="font-size:20px">
-	<li>{{name}}
+{% for name, categories in sections %}
+	<h2>{{name}}</h2>
 	<ul>
 	{% for categoryName, categoryData in categories %}
 			<li>{{categoryName}}
@@ -15,7 +13,8 @@
 						<li>{{moduleName}} 
 						<ul>
 						{%for doc in module.docs %}
-							<li><a href="/doc/{{doc.id}}">{{doc.name}}</a></li>
+							<li><a href="/doc/{{doc.id}}">{{doc.name}}</a>
+							<span style="font-size:12px; color:gray">{{doc.filepath}}</span></li>
 						{%endfor%}
 						</ul>
 						</li>
@@ -24,7 +23,7 @@
 			</li>
 	{%endfor%}
 	</ul>
-	</li>
+	
 </ul>
 {%endfor%}
 {%endblock%}

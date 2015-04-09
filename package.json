@@ -1,6 +1,6 @@
 {
 	"name": "cidoc",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "",
 	"main": "index.js",
 	"scripts": {
@@ -21,6 +21,7 @@
 	"homepage": "https://github.com/wiresjs/cidoc",
 	"dependencies": {
 		"async": "^0.9.0",
+		"connect-basic-auth": "^0.1.0",
 		"express": "^4.12.3",
 		"highlight.js": "^8.5.0",
 		"jsdoc-parse": "^0.2.11",

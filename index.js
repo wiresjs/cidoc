@@ -137,7 +137,7 @@ var JSDoc = Class.extend({
 	 */
 	parse: function(fname, cb) {
 
-
+		this.fname = fname;
 		this.cb = cb;
 
 		var contents = getFileContents(fname);
@@ -167,7 +167,8 @@ var JSDoc = Class.extend({
 				category: null,
 				module: null,
 				name: null,
-				summary: []
+				summary: [],
+				filepath: this.fname
 			},
 			methods: [],
 			functions: []
@@ -222,7 +223,10 @@ var JSDoc = Class.extend({
 
 					}
 					if (data.macro === "code") {
-						method.code = data.code.split('\t').join('');
+						method.code = data.code;
+						if (method.code[0] === "\t") {
+							method.code = method.code.substring(1, data.code.length);
+						}
 					}
 					if (data.macro === "text") {
 						if (data.text) {
@@ -321,7 +325,7 @@ var getDocsFromDirectory = function(dir, sectionName, done) {
 					if (stat && stat.isDirectory()) {
 
 						var validRootFolder = _.filter(ignoredFolders, function(f) {
-							return f.indexOf(file) === -1;
+							return file.indexOf(f) > -1
 						}).length === 0;
 						if (validRootFolder) {
 							runDirs(file, function(err, res) {
@@ -370,14 +374,11 @@ var getDocsFromDirectory = function(dir, sectionName, done) {
 						docs: []
 					}
 				}
-
-
 				var docId = slugify(sectionName + " " + doc.info.category + " " + doc.info.module + " " + doc.info.name);
-
 				docs[docId] = doc;
-
 				section[info.category].modules[info.module].docs.push({
 					name: info.name,
+					filepath: info.filepath,
 					id: docId
 				});
 				next(null);
