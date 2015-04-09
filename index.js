@@ -46,6 +46,7 @@ var getConfiguration = function() {
 		}
 	} else {
 		logger.warn("Configuration file was not found");
+		process.exit(1);
 	}
 	return config;
 }
