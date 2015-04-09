@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /**
  * @category Essentials
  * @module  CLI
