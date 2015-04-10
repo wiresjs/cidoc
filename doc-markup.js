@@ -1,6 +1,6 @@
 var _ = require('lodash')
 module.exports = function(json) {
-	console.log(json)
+
 	var markup = [];
 
 	markup.push('# ' + json.info.module + " / " + json.info.category + " / " + json.info.name);

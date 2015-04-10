@@ -1,0 +1,27 @@
+{% extends 'index.html' %}
+
+
+{%block content%}
+<h1>Docs</h1>
+<p>Shows latest 100 commits</p>
+<table >
+<thead>
+
+<th>Version</th>
+<th width="300">Message</th>
+<th>Username</th>
+<th>Date</th>
+
+</thead>
+{% for item in versions %}
+<tbody>
+	<tr>
+	<td><a href="/version/{{item.version}}/">{{item.version}}</a></td>
+	<td>{{item.message}}</td>
+	<td>{{item.username}}</td>
+	<td>{{item.date|date('F jS, Y, H:i')}}</td>
+	</tr>
+	</tbody>
+{%endfor%}
+</table>
+{%endblock%}

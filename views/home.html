@@ -2,7 +2,8 @@
 
 
 {%block content%}
-<h1>Documentation</h1>
+<h1>Documentation <a href="/" style='font-size:12px'>versions</a></h1>
+
 {% for name, categories in sections %}
 	<h2>{{name}}</h2>
 	<ul>
@@ -13,7 +14,7 @@
 						<li>{{moduleName}} 
 						<ul>
 						{%for doc in module.docs %}
-							<li><a href="/doc/{{doc.id}}">{{doc.name}}</a>
+							<li><a href="/doc/{{version}}/{{doc.id}}">{{doc.name}}</a>
 							<span style="font-size:12px; color:gray">{{doc.filepath}}</span></li>
 						{%endfor%}
 						</ul>

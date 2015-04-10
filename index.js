@@ -25,6 +25,7 @@ var shortid = require('shortid');
 var jsonpack = require('jsonpack');
 
 
+
 var slugify = function(text) {
 	return text.toLowerCase()
 		.replace(/[^\w ]+/g, '')
@@ -396,14 +397,16 @@ var getDocsFromDirectory = function(dir, sectionName, done) {
 
 var configuration = getConfiguration();
 
-var SendData = function(data) {
+var SendData = function(data, opts) {
 	var packed = jsonpack.pack(data);
 	var request = require('request');
+	var form = {
+		packed: packed
+	}
+	form = _.merge(form, opts);
 	request.post({
 		url: configuration.host,
-		form: {
-			packed: packed
-		}
+		form: form,
 	}, function(error, response, body) {
 		console.log(body);
 	});
@@ -447,12 +450,68 @@ exports.module = CIDoc = {
 	 * @param  {[type]}   folders [description]
 	 * @param  {Function} cb      [description]
 	 */
-	send: function(conf) {
+	send: function(conf, opts) {
 		this.generate(conf.folders, function(data) {
-			SendData(data);
+			SendData(data, opts);
 		});
 	}
 }
 
 
-CIDoc.send(configuration)
+var Args = require('arg-parser'),
+	args = new Args('CIDOC', '1.0', 'CIDOC client',
+		'In addition to these parameters - more info here...');
+
+/*
+var version = req.body.version || new Date().getTime() + "";
+		var message = req.body.message || "Version " + version;
+		var username = req.body.username;
+ */
+
+args.add({
+	name: 'cversion',
+	switches: ['-cv'],
+	value: 'cversion',
+	required: true
+});
+args.add({
+	name: 'message',
+	switches: ['-m'],
+	value: 'message',
+	required: true
+});
+
+args.add({
+	name: 'username',
+	switches: ['-u'],
+	value: 'username',
+	required: true
+});
+
+
+args.add({
+	name: 'log',
+	switches: ['-l'],
+	value: 'log'
+});
+
+args.add({
+	name: 'input',
+	switches: ['-i', '--input-file'],
+	value: 'file'
+});
+if (args.parse()) {
+	var opts = {
+		version: args.params.cversion,
+		message: args.params.message,
+		username: args.params.username
+	}
+
+	opts.log = true
+	if (args.params.log) {
+		if (args.params.log === "false") {
+			opts.log = false;
+		}
+	}
+	CIDoc.send(configuration, opts)
+}
