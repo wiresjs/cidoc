@@ -19,7 +19,7 @@ var jsonpack = require('jsonpack');
 var basicAuth = require('connect-basic-auth');
 var mkdirp = require('mkdirp');
 var path = require('path');
-
+var _ = require('lodash');
 var logFile = './docs/log.json';
 
 var getVersionLogFile = function() {
@@ -31,10 +31,12 @@ var getVersionLogFile = function() {
 	return docs;
 }
 
+var jsonVersionCache = {};
+
 /**
  * Writes version to log
  *
- * Usage example:
+ * Usage example TES1 :
  * '''js
  * writeVersionLog('1.0.1', "Some super message", "ivan")
  * something({
@@ -42,18 +44,32 @@ var getVersionLogFile = function() {
  * })
  * '''
  */
+
+
 var writeVersionLog = function(version, message, username) {
 
-	var logs = getVersionLogFile();
-
 	var now = new Date()
+	var logs = getVersionLogFile();
+	var justupdate = false;
+	_.each(logs, function(item, index) {
+		if (item.version === version) {
+			logs[index].date = now
+			logs[index].username = username;
+			justupdate = true;
+		}
+	})
 
-	logs.push({
-		version: version,
-		message: message,
-		username: username || "Unknown",
-		date: now
-	});
+
+	if (justupdate === false) {
+		logs.push({
+			version: version,
+			message: message,
+			username: username || "Unknown",
+			date: now
+		});
+	} else {
+		delete jsonVersionCache[version]
+	}
 
 
 	if (logs.length > 100) {
@@ -62,15 +78,13 @@ var writeVersionLog = function(version, message, username) {
 	fs.writeFileSync(logFile, JSON.stringify(logs));
 }
 
-var jsonVersionCache = {};
-
 var readDocVersion = function(version, refresh) {
 
 	var keys = Object.keys(jsonVersionCache);
 	if (keys.length > 20) {
 		delete jsonVersionCache[keys[0]];
 	}
-	if (!jsonVersionCache[version] && !refresh) {
+	if (!jsonVersionCache[version]) {
 		jsonVersionCache[version] = JSON.parse(fs.readFileSync('./docs/' + version));
 	}
 	return jsonVersionCache[version];
@@ -160,9 +174,8 @@ app.post('/update', function(req, res) {
 		var message = req.body.message || "Version " + version;
 		var username = req.body.username;
 		var log = req.body.log !== 'false';
-		console.log(req.body.log);
+
 		if (log) {
-			console.log("WWIRTE LOG")
 			writeVersionLog(version, message, username, log);
 		}
 		// Writing documenation json to a folder
