@@ -31,6 +31,17 @@ var getVersionLogFile = function() {
 	return docs;
 }
 
+/**
+ * Writes version to log
+ *
+ * Usage example:
+ * '''js
+ * writeVersionLog('1.0.1', "Some super message", "ivan")
+ * something({
+ *      name : "1122"
+ * })
+ * '''
+ */
 var writeVersionLog = function(version, message, username) {
 
 	var logs = getVersionLogFile();
@@ -59,7 +70,7 @@ var readDocVersion = function(version, refresh) {
 	if (keys.length > 20) {
 		delete jsonVersionCache[keys[0]];
 	}
-	if (!jsonVersionCache[version] && refresh === undefined) {
+	if (!jsonVersionCache[version] && !refresh) {
 		jsonVersionCache[version] = JSON.parse(fs.readFileSync('./docs/' + version));
 	}
 	return jsonVersionCache[version];

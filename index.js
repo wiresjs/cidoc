@@ -70,9 +70,10 @@ var extractData = function(line) {
 			text: matches[2].trim()
 		}
 	} else {
+
 		return {
 			macro: 'text',
-			text: line.trim()
+			text: line
 		}
 	}
 }
@@ -286,8 +287,9 @@ var JSDoc = Class.extend({
 				this.blocks.push([])
 			}
 			if (this.blocks.length > 0 && this.pushing) {
-
-				var text = line.split('/').join('').split('*').join('').split('\t').join('');
+				var text = line.replace(/^\s+/, "")
+				text = text.split('/').join('').split('*').join('');
+				text = text.split("'").join("`");
 				this.blocks[this.blocks.length - 1].push(text);
 			}
 		}
