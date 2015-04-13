@@ -111,14 +111,17 @@ app.use(basicAuth(function(credentials, req, res, next) {
 	}
 }, 'Please enter your credentials.'));
 
-app.all('*', function(req, res, next) {
-	req.requireAuthorization(req, res, next);
-});
 
 app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
 app.set('views', __dirname + '/views');
 app.use('/public', express.static(path.join(__dirname, 'public')));
+
+
+app.all('*', function(req, res, next) {
+	req.requireAuthorization(req, res, next);
+});
+
 
 var marked = require('marked');
 
